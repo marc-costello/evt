@@ -1,0 +1,25 @@
+{
+  "name": "evt",
+  "version": "0.0.0",
+  "authors": [
+    "Marc Costello <cossie7722@gmail.com>",
+    "Richard Dowson <richard.dowson@gmail.com>"
+  ],
+  "description": "Event system for the DOM",
+  "main": "dist/evt.js",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "dom",
+    "events"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
