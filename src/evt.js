@@ -17,34 +17,34 @@
       - should we cache dom selectors? we should make sure the gc can still clean up.
    */
 
-   function ext() {
+   function evt() {
 
    }
 
-   ext.prototype.on = function() {
+   evt.prototype.on = function() {
       // todo
    };
 
-   ext.prototype.one = function() {
+   evt.prototype.one = function() {
       // todo
    };
 
-   ext.prototype.off = function() {
+   evt.prototype.off = function() {
       // todo
    };
 
-   ext.prototype.raise = function() {
+   evt.prototype.raise = function() {
       // todo
    };
 
-   function extInit(element) {
+   function evtInit(element) {
 
       // handle the element/selector
 
-      return new ext();
+      return new evt();
    }
 
    // or however we decide to export it.
-   module.exports = extInit;
+   module.exports = evtInit;
 
 })();
