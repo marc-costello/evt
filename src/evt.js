@@ -1,50 +1,46 @@
-(function() {
+"use strict";
 
-   "use strict";
+/*
+  EVT NEEDS:
 
-   /*
-      EVT NEEDS:
+  .on();
+  .one();
+  .off();
+  .raise();
 
-      .on();
-      .one();
-      .off();
-      .raise();
+  - namespacing, e.g: evt(element).on("click.mynamespace", handler);
+  - filtering, e.g: evt(document).on("click", "#my-element", handler);
+  - raise/trigger, e.g: evt(document).raise("my-event", payload);
 
-      - namespacing, e.g: evt(element).on("click.mynamespace", handler);
-      - filtering, e.g: evt(document).on("click", "#my-element", handler);
-      - raise/trigger, e.g: evt(document).raise("my-event", payload);
+  - should we cache dom selectors? we should make sure the gc can still clean up.
+*/
 
-      - should we cache dom selectors? we should make sure the gc can still clean up.
-   */
+function evt() {
 
-   function evt() {
+}
 
-   }
+evt.prototype.on = function() {
+  // todo
+};
 
-   evt.prototype.on = function() {
-      // todo
-   };
+evt.prototype.one = function() {
+  // todo
+};
 
-   evt.prototype.one = function() {
-      // todo
-   };
+evt.prototype.off = function() {
+  // todo
+};
 
-   evt.prototype.off = function() {
-      // todo
-   };
+evt.prototype.raise = function() {
+  // todo
+};
 
-   evt.prototype.raise = function() {
-      // todo
-   };
+function evtInit(element) {
 
-   function evtInit(element) {
+  // handle the element/selector
 
-      // handle the element/selector
+  return new evt();
+}
 
-      return new evt();
-   }
-
-   // or however we decide to export it.
-   module.exports = evtInit;
-
-})();
+// or however we decide to export it.
+module.exports = evtInit;
