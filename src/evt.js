@@ -1,12 +1,14 @@
 var evtAttributeName = '__evt';
+var idCount = 0;
 var tree = {};
 
 function generateToken() {
-  // todo
+  // todo - make this better.
+  return idCount++;
 }
 
-function evt(element) {
-
+function evt(elements) {
+  this._elements = elements;
 }
 
 evt.prototype.on = function() {
@@ -31,7 +33,7 @@ function evtInit(element) {
   }
 
   // first lets get on the same page. If it's not an Element already. querySelectorAll for it.
-  var resolvedElement;
+  var resolvedElements;
   if (!(element instanceof Element)) {
     resolvedElements = document.querySelectorAll(element);
   } else {
@@ -47,6 +49,8 @@ function evtInit(element) {
       resolvedElements[i].setAttribute(evtAttributeName, elementToken);
     }
   }
+
+  return new evt(resolvedElements);
 }
 
 module.exports = evtInit;
