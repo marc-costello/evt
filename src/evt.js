@@ -1,21 +1,11 @@
-"use strict";
+var evtAttributeName = '__evt';
+var tree = {};
 
-/*
-  EVT NEEDS:
+function generateToken() {
+  // todo
+}
 
-  .on();
-  .one();
-  .off();
-  .raise();
-
-  - namespacing, e.g: evt(element).on("click.mynamespace", handler);
-  - filtering, e.g: evt(document).on("click", "#my-element", handler);
-  - raise/trigger, e.g: evt(document).raise("my-event", payload);
-
-  - should we cache dom selectors? we should make sure the gc can still clean up.
-*/
-
-function evt() {
+function evt(element) {
 
 }
 
@@ -36,11 +26,27 @@ evt.prototype.raise = function() {
 };
 
 function evtInit(element) {
+  if (!element || (element instanceof Element) === false) {
+    throw new Error('You must supply a DOM element or selector to evt');
+  }
 
-  // handle the element/selector
+  // first lets get on the same page. If it's not an Element already. querySelectorAll for it.
+  var resolvedElement;
+  if (!(element instanceof Element)) {
+    resolvedElements = document.querySelectorAll(element);
+  } else {
+    resolvedElements[0] = element;
+  }
 
-  return new evt();
+  for (var i=0; i < resolvedElements.length; i++) {
+    // now we need to check this element for an existing evt attribute
+    var elementToken = resolvedElements[i].getAttribute(evtAttributeName);
+    if (!elementToken) {
+      // generate one and attach it to the element.
+      elementToken = generateToken();
+      resolvedElements[i].setAttribute(evtAttributeName, elementToken);
+    }
+  }
 }
 
-// or however we decide to export it.
 module.exports = evtInit;
