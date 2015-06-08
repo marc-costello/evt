@@ -1,5 +1,5 @@
 var evtAttributeName = '__evt';
-var idCount = 0;
+var idCount = 1;
 var tree = {};
 
 function generateToken() {
@@ -28,7 +28,7 @@ evt.prototype.raise = function() {
 };
 
 function evtInit(element) {
-  if (!element || (element instanceof Element) === false || typeof element !== 'string') {
+  if (!element || ((element instanceof Element) === false || typeof element !== 'string')) {
     throw new Error('You must supply a DOM element or selector to evt');
   }
 
