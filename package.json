@@ -1,33 +1,33 @@
 {
-  "name": "module-name",
-  "version": "10.3.1",
-  "description": "An example module to illustrate the usage of a package.json",
-  "author": "Your Name <you.name@example.org>",
-  "contributors": [{
-    "name": "Marc Costello",
-    "email": "cossie7722@gmail.com"
-  },
-  {
-    "name": "Richard Dowson",
-    "email": "richard.dowson@gmail.com"
-  }],
+  "name": "evt",
+  "version": "0.1.0",
+  "description": "A browser based eventing api to be used with the DOM.",
+  "author": "Marc Costello <cossie7722@gmail.com>, Richard Dowson <richard.dowson@gmail.com>",
+  "contributors": [
+    {
+      "name": "Marc Costello",
+      "email": "cossie7722@gmail.com"
+    },
+    {
+      "name": "Richard Dowson",
+      "email": "richard.dowson@gmail.com"
+    }
+  ],
   "main": "dist/evt.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodejitsu/browsenpm.org"
+    "url": "https://github.com/marc-costello/evt"
   },
   "bugs": {
-    "url": "https://github.com/nodejitsu/browsenpm.org/issues"
+    "url": "https://github.com/marc-costello/evt/issues"
   },
   "keywords": [
-    "dom events",
-    ""
+    "dom events"
   ],
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
-
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1"
   },
   "preferGlobal": true,
   "license": "MIT"
