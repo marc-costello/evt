@@ -28,7 +28,7 @@ evt.prototype.raise = function() {
 };
 
 function evtInit(element) {
-  if (!element || ((element instanceof Element) === false || typeof element !== 'string')) {
+  if (!element || ((element instanceof Element) || typeof element === 'string')) {
     throw new Error('You must supply a DOM element or selector to evt');
   }
 
