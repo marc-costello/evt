@@ -11,10 +11,13 @@ function EventHandler(token, eventName, handler, enabled) {
 
 module.exports = {
   add : function(token, eventName, handler) {
-    _cache[token] = new EventHandler(token, eventName, handler, true);
+    _cache.push(new EventHandler(token, eventName, handler, true));
   },
   removeHandler : function(token, handler) {
-    delete _cache[token];
+    var index = _cache.findIndex(function(entry) {
+      return entry.elementToken === token && entry.handler === handler;
+    });
+    _cache.splice(index, 1);
   },
   getHandlers : function(token, eventName) {
     return _cache
