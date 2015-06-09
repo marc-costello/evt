@@ -1,3 +1,4 @@
+var cache = require('cache');
 var evtAttributeName = '__evt';
 var idCount = 1;
 var tree = {};
