@@ -20,12 +20,10 @@ module.exports = {
     _cache.splice(index, 1);
   },
   getHandlers : function(token, eventName) {
-    return _cache
-      .filter(function(entry) {
-        return entry.elementToken === token && entry.eventName === eventName;
-      })
-      .map(function(h) {
-        return h.handler;
-      });
+    return _cache.reduce(function(acc, entry) {
+      if (entry.elementToken === token && entry.eventName === eventName) {
+        acc.push(entry.handler);
+      }
+    }, []);
   }
 };
