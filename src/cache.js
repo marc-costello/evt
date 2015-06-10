@@ -1,3 +1,5 @@
+'use strict';
+
 var _cache = [];
 
 function EventHandler(token, eventName, handler, enabled) {
@@ -13,9 +15,9 @@ module.exports = {
   add : function(token, eventName, handler) {
     _cache.push(new EventHandler(token, eventName, handler, true));
   },
-  removeHandler : function(token, handler) {
+  removeHandler : function(token, eventName, handler) {
     var index = _cache.findIndex(function(entry) {
-      return entry.elementToken === token && entry.handler === handler;
+      return entry.elementToken === token && entry.eventName === eventName && entry.handler === handler;
     });
     _cache.splice(index, 1);
   },

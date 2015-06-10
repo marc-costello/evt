@@ -1,7 +1,8 @@
+'use strict';
+
 var cache = require('cache');
 var evtAttributeName = '__evt';
 var idCount = 1;
-var tree = {};
 
 function generateToken() {
   // todo - make this better.
