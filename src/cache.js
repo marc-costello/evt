@@ -3,12 +3,13 @@
 var _cache = [];
 
 function EventHandler(token, eventName, handler, enabled) {
+  var eventNameSplit = eventName.split('.');
   this.elementToken = token;
-  this.eventName = 'click.namespacename';
-  this.eventType = 'click';
-  this.namespace = 'namespace';
+  this.eventName = eventName;
   this.handler = handler;
   this.enabled = enabled;
+  this.eventType = eventNameSplit[0];
+  this.namespace = eventNameSplit[1];
 }
 
 module.exports = {
