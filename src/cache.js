@@ -2,19 +2,18 @@
 
 var _cache = [];
 
-function EventHandler(token, eventName, handler, enabled) {
-  var eventNameSplit = eventName.split('.');
+function EventHandler(token, eventName, splitEventName, handler, enabled) {
   this.elementToken = token;
   this.eventName = eventName;
   this.handler = handler;
   this.enabled = enabled;
-  this.eventType = eventNameSplit[0];
-  this.namespace = eventNameSplit[1];
+  this.eventType = splitEventName[0];
+  this.namespace = splitEventName[1];
 }
 
 module.exports = {
-  add : function(token, eventName, handler) {
-    _cache.push(new EventHandler(token, eventName, handler, true));
+  add : function(token, eventName, splitEventName, handler) {
+    _cache.push(new EventHandler(token, eventName, splitEventName, handler, true));
   },
   removeHandler : function(token, eventName, handler) {
     var index = _cache.findIndex(function(entry) {
@@ -28,5 +27,10 @@ module.exports = {
         acc.push(entry.handler);
       }
     }, []);
+  },
+  contains : function(eventName, handler) {
+    return _cache.some(function(entry) {
+      return entry.eventName === eventName && entry.handler === handler;
+    });
   }
 };

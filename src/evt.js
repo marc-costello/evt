@@ -9,12 +9,45 @@ function generateToken() {
   return idCount++;
 }
 
+function createProxyHandler(token) {
+  return function(event) {
+    var handlers = cache.getHandlers(token, event.type);
+    handlers.forEach(function(h) {
+      h(event);
+    });
+  };
+}
+
+function splitEventDescriptor(descriptor) {
+  return descriptor.split('.');
+}
+
+function on(element, descriptor, handler) {
+  var token = element.getAttribute(evtAttributeName);
+  var splitDescriptor = splitEventDescriptor(descriptor);
+
+  cache.add(token, descriptor, splitDescriptor, handler);
+
+  if (!cache.contains(descriptor, handler)) {
+    element.addEventListener(splitDescriptor[0], createProxyHandler(token));
+  }
+}
+
 function evt(elements) {
   this._elements = elements;
 }
 
-evt.prototype.on = function() {
-  // todo
+evt.prototype.on = function(descriptor, handler) {
+  if (!descriptor) {
+    throw new Error('An event type is required');
+  }
+  if (!handler) {
+    throw new Error('A handler is required');
+  }
+
+  for (var i=0; i < this._elements.length; i++) {
+    on(this._elements, descriptor, handler);
+  }
 };
 
 evt.prototype.one = function() {
