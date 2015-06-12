@@ -1,6 +1,6 @@
 'use strict';
 
-var cache = require('cache');
+var cache = require('./cache');
 var evtAttributeName = '__evt';
 var idCount = 1;
 
@@ -57,6 +57,8 @@ evt.prototype.on = function(descriptor, handler) {
   for (var i=0; i < this._elements.length; i++) {
     on(this._elements[i], descriptor, handler);
   }
+
+  return this;
 };
 
 evt.prototype.one = function() {
@@ -73,6 +75,8 @@ evt.prototype.off = function(descriptor, handler) {
   for (var i=0; i < this._elements.length; i++) {
     off(this._elements[i], descriptor, handler);
   }
+
+  return this;
 };
 
 evt.prototype.raise = function() {
@@ -80,7 +84,7 @@ evt.prototype.raise = function() {
 };
 
 function evtInit(element) {
-  if (!element || ((element instanceof Element) || typeof element === 'string')) {
+  if (!element || !((element instanceof Element) || typeof element === 'string')) {
     throw new Error('You must supply a DOM element or selector to evt');
   }
 
@@ -102,4 +106,4 @@ function evtInit(element) {
   return new evt(resolvedElements);
 }
 
-module.exports = evtInit;
+window.evt = evtInit;
