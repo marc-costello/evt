@@ -2,7 +2,8 @@
 
 var _cache = [];
 
-function EventHandler(token, eventName, splitEventName, handler, enabled) {
+function EventHandler(token, eventName, handler, enabled) {
+  var splitEventName = eventName.split('.');
   this.elementToken = token;
   this.eventName = eventName;
   this.handler = handler;
@@ -13,7 +14,9 @@ function EventHandler(token, eventName, splitEventName, handler, enabled) {
 
 module.exports = {
   add : function(token, eventName, splitEventName, handler) {
-    _cache.push(new EventHandler(token, eventName, splitEventName, handler, true));
+    var eventHandler = new EventHandler(token, eventName, handler, true);
+    _cache.push(eventHandler);
+    return eventHandler;
   },
   removeHandler : function(token, eventName, handler) {
     var index = _cache.findIndex(function(entry) {

@@ -27,8 +27,8 @@ function on(element, descriptor, handler) {
   var splitDescriptor = splitEventDescriptor(descriptor);
 
   if (!cache.contains(descriptor, handler)) {
-    element.addEventListener(splitDescriptor[0], createProxyHandler(token));
-    cache.add(token, descriptor, splitDescriptor, handler);
+    var cachedEvent = cache.add(token, descriptor, splitDescriptor, handler);
+    element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
   }
 }
 
