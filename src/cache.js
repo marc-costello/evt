@@ -25,11 +25,13 @@ module.exports = {
     _cache.splice(index, 1);
   },
   getHandlers : function(token, eventName) {
-    return _cache.reduce(function(acc, entry) {
+    var returnAcc = _cache.reduce(function(acc, entry) {
       if (entry.elementToken === token && entry.eventName === eventName) {
         acc.push(entry.handler);
+        return acc;
       }
     }, []);
+    return returnAcc;
   },
   contains : function(eventName, handler) {
     return _cache.some(function(entry) {

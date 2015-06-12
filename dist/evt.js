@@ -1423,11 +1423,13 @@ module.exports = {
     _cache.splice(index, 1);
   },
   getHandlers : function(token, eventName) {
-    return _cache.reduce(function(acc, entry) {
+    var returnAcc = _cache.reduce(function(acc, entry) {
       if (entry.elementToken === token && entry.eventName === eventName) {
         acc.push(entry.handler);
+        return acc;
       }
     }, []);
+    return returnAcc;
   },
   contains : function(eventName, handler) {
     return _cache.some(function(entry) {
@@ -1549,5 +1551,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9ebccee8.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a31fd2cc.js","/")
 },{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])
