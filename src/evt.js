@@ -26,10 +26,19 @@ function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
   var splitDescriptor = splitEventDescriptor(descriptor);
 
-  cache.add(token, descriptor, splitDescriptor, handler);
-
   if (!cache.contains(descriptor, handler)) {
     element.addEventListener(splitDescriptor[0], createProxyHandler(token));
+    cache.add(token, descriptor, splitDescriptor, handler);
+  }
+}
+
+function off(element, descriptor, handler) {
+  var token = element.getAttribute(evtAttributeName);
+  var splitDescriptor = splitEventDescriptor(descriptor);
+
+  if (cache.contains(descriptor, handler)) {
+    element.removeEventListener(splitDescriptor[0], handler);
+    cache.removeHandler(token, descriptor, handler);
   }
 }
 
@@ -46,7 +55,7 @@ evt.prototype.on = function(descriptor, handler) {
   }
 
   for (var i=0; i < this._elements.length; i++) {
-    on(this._elements, descriptor, handler);
+    on(this._elements[i], descriptor, handler);
   }
 };
 
@@ -54,8 +63,16 @@ evt.prototype.one = function() {
   // todo
 };
 
-evt.prototype.off = function() {
-  // todo
+evt.prototype.off = function(descriptor, handler) {
+  if (!descriptor) {
+    throw new Error('An event descriptor is required');
+  }
+
+  // todo - if handler is undefined - remove all handlers for that descriptor
+
+  for (var i=0; i < this._elements.length; i++) {
+    off(this._elements[i], descriptor, handler);
+  }
 };
 
 evt.prototype.raise = function() {
