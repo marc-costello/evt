@@ -3,17 +3,20 @@
 var _cache = [];
 
 function EventHandler(token, eventName, handler, enabled) {
+  var splitEventName = eventName.split('.');
   this.elementToken = token;
-  this.eventName = 'click.namespacename';
-  this.eventType = 'click';
-  this.namespace = 'namespace';
+  this.eventName = eventName;
   this.handler = handler;
   this.enabled = enabled;
+  this.eventType = splitEventName[0];
+  this.namespace = splitEventName[1];
 }
 
 module.exports = {
-  add : function(token, eventName, handler) {
-    _cache.push(new EventHandler(token, eventName, handler, true));
+  add : function(token, eventName, splitEventName, handler) {
+    var eventHandler = new EventHandler(token, eventName, handler, true);
+    _cache.push(eventHandler);
+    return eventHandler;
   },
   removeHandler : function(token, eventName, handler) {
     var index = _cache.findIndex(function(entry) {
@@ -27,5 +30,10 @@ module.exports = {
         acc.push(entry.handler);
       }
     }, []);
+  },
+  contains : function(eventName, handler) {
+    return _cache.some(function(entry) {
+      return entry.eventName === eventName && entry.handler === handler;
+    });
   }
 };
