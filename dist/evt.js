@@ -1400,7 +1400,8 @@ process.chdir = function (dir) {
 
 var _cache = [];
 
-function EventHandler(token, eventName, splitEventName, handler, enabled) {
+function EventHandler(token, eventName, handler, enabled) {
+  var splitEventName = eventName.split('.');
   this.elementToken = token;
   this.eventName = eventName;
   this.handler = handler;
@@ -1411,7 +1412,9 @@ function EventHandler(token, eventName, splitEventName, handler, enabled) {
 
 module.exports = {
   add : function(token, eventName, splitEventName, handler) {
-    _cache.push(new EventHandler(token, eventName, splitEventName, handler, true));
+    var eventHandler = new EventHandler(token, eventName, handler, true);
+    _cache.push(eventHandler);
+    return eventHandler;
   },
   removeHandler : function(token, eventName, handler) {
     var index = _cache.findIndex(function(entry) {
@@ -1465,8 +1468,8 @@ function on(element, descriptor, handler) {
   var splitDescriptor = splitEventDescriptor(descriptor);
 
   if (!cache.contains(descriptor, handler)) {
-    element.addEventListener(splitDescriptor[0], createProxyHandler(token));
-    cache.add(token, descriptor, splitDescriptor, handler);
+    var cachedEvent = cache.add(token, descriptor, splitDescriptor, handler);
+    element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
   }
 }
 
@@ -1495,6 +1498,8 @@ evt.prototype.on = function(descriptor, handler) {
   for (var i=0; i < this._elements.length; i++) {
     on(this._elements[i], descriptor, handler);
   }
+
+  return this;
 };
 
 evt.prototype.one = function() {
@@ -1511,6 +1516,8 @@ evt.prototype.off = function(descriptor, handler) {
   for (var i=0; i < this._elements.length; i++) {
     off(this._elements[i], descriptor, handler);
   }
+
+  return this;
 };
 
 evt.prototype.raise = function() {
@@ -1542,5 +1549,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c2764158.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9ebccee8.js","/")
 },{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])
