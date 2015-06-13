@@ -1400,10 +1400,10 @@ process.chdir = function (dir) {
 
 var _cache = [];
 
-function EventHandler(token, eventName, handler, enabled) {
-  var splitEventName = eventName.split('.');
+function EventHandler(token, descriptor, handler, enabled) {
+  var splitEventName = descriptor.split('.');
   this.elementToken = token;
-  this.eventName = eventName;
+  this.descriptor = descriptor;
   this.handler = handler;
   this.enabled = enabled;
   this.eventType = splitEventName[0];
@@ -1411,36 +1411,41 @@ function EventHandler(token, eventName, handler, enabled) {
 }
 
 module.exports = {
-  add : function(token, eventName, splitEventName, handler) {
-    var eventHandler = new EventHandler(token, eventName, handler, true);
+  add : function(token, descriptor, handler) {
+    var eventHandler = new EventHandler(token, descriptor, handler, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
-  removeHandler : function(token, eventName, handler) {
+  removeHandler : function(token, descriptor, handler) {
     var index = _cache.findIndex(function(entry) {
-      return entry.elementToken === token && entry.eventName === eventName && entry.handler === handler;
+      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
     });
     _cache.splice(index, 1);
   },
-  removeAllHandlers : function(token, eventName) {
+  removeAllHandlers : function(token, descriptor) {
     _cache.forEach(function(entry, i, arr) {
-      if (entry.elementToken === token && entry.eventName === eventName) {
+      if (entry.elementToken === token && entry.descriptor === descriptor) {
         arr.splice(i, 1);
       }
     });
   },
-  getHandlers : function(token, eventName) {
+  getHandlers : function(token, descriptor) {
     var returnAcc = _cache.reduce(function(acc, entry) {
-      if (entry.elementToken === token && entry.eventName === eventName) {
+      if (entry.elementToken === token && entry.descriptor === descriptor) {
         acc.push(entry.handler);
         return acc;
       }
     }, []);
     return returnAcc;
   },
-  contains : function(eventName, handler) {
+  getHandler : function(token, descriptor, handler) {
+    return _cache.filter(function(entry) {
+      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
+    })[0];
+  },
+  contains : function(descriptor, handler) {
     return _cache.some(function(entry) {
-      return entry.eventName === eventName && entry.handler === handler;
+      return entry.descriptor === descriptor && entry.handler === handler;
     });
   }
 };
@@ -1468,28 +1473,33 @@ function createProxyHandler(token) {
   };
 }
 
-function splitEventDescriptor(descriptor) {
-  return descriptor.split('.');
-}
-
 function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
-  var splitDescriptor = splitEventDescriptor(descriptor);
 
   if (!cache.contains(descriptor, handler)) {
-    var cachedEvent = cache.add(token, descriptor, splitDescriptor, handler);
+    var cachedEvent = cache.add(token, descriptor, handler);
     element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
   }
 }
 
 function off(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
-  var splitDescriptor = splitEventDescriptor(descriptor);
 
-  if (cache.contains(descriptor, handler)) {
-    element.removeEventListener(splitDescriptor[0], handler);
+  var cachedHandler = cache.getHandler(token, descriptor, handler);
+  if (cachedHandler) {
+    element.removeEventListener(cachedHandler.eventType, handler);
     cache.removeHandler(token, descriptor, handler);
   }
+}
+
+function offAll(element, descriptor) {
+  var token = element.getAttribute(evtAttributeName);
+
+  var cachedHandlers = cache.getHandlers(token, descriptor);
+  for (var i=0; i < cachedHandlers.length; i++) {
+    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].handler);
+  }
+  cache.removeAllHandlers(token, descriptor);
 }
 
 function evt(elements) {
@@ -1520,10 +1530,14 @@ evt.prototype.off = function(descriptor, handler) {
     throw new Error('An event descriptor is required');
   }
 
-  // todo - if handler is undefined - remove all handlers for that descriptor
-
-  for (var i=0; i < this._elements.length; i++) {
-    off(this._elements[i], descriptor, handler);
+  if (!handler) {
+    for (var i=0; i < this._elements.length; i++) {
+      offAll(this._elements[i], descriptor);
+    }
+  } else {
+    for (var y=0; y < this._elements.length; y++) {
+      off(this._elements[y], descriptor, handler);
+    }
   }
 
   return this;
@@ -1558,5 +1572,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f7625f46.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_da238a6e.js","/")
 },{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])

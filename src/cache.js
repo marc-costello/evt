@@ -2,10 +2,10 @@
 
 var _cache = [];
 
-function EventHandler(token, eventName, handler, enabled) {
-  var splitEventName = eventName.split('.');
+function EventHandler(token, descriptor, handler, enabled) {
+  var splitEventName = descriptor.split('.');
   this.elementToken = token;
-  this.eventName = eventName;
+  this.descriptor = descriptor;
   this.handler = handler;
   this.enabled = enabled;
   this.eventType = splitEventName[0];
@@ -13,36 +13,41 @@ function EventHandler(token, eventName, handler, enabled) {
 }
 
 module.exports = {
-  add : function(token, eventName, splitEventName, handler) {
-    var eventHandler = new EventHandler(token, eventName, handler, true);
+  add : function(token, descriptor, handler) {
+    var eventHandler = new EventHandler(token, descriptor, handler, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
-  removeHandler : function(token, eventName, handler) {
+  removeHandler : function(token, descriptor, handler) {
     var index = _cache.findIndex(function(entry) {
-      return entry.elementToken === token && entry.eventName === eventName && entry.handler === handler;
+      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
     });
     _cache.splice(index, 1);
   },
-  removeAllHandlers : function(token, eventName) {
+  removeAllHandlers : function(token, descriptor) {
     _cache.forEach(function(entry, i, arr) {
-      if (entry.elementToken === token && entry.eventName === eventName) {
+      if (entry.elementToken === token && entry.descriptor === descriptor) {
         arr.splice(i, 1);
       }
     });
   },
-  getHandlers : function(token, eventName) {
+  getHandlers : function(token, descriptor) {
     var returnAcc = _cache.reduce(function(acc, entry) {
-      if (entry.elementToken === token && entry.eventName === eventName) {
+      if (entry.elementToken === token && entry.descriptor === descriptor) {
         acc.push(entry.handler);
         return acc;
       }
     }, []);
     return returnAcc;
   },
-  contains : function(eventName, handler) {
+  getHandler : function(token, descriptor, handler) {
+    return _cache.filter(function(entry) {
+      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
+    })[0];
+  },
+  contains : function(descriptor, handler) {
     return _cache.some(function(entry) {
-      return entry.eventName === eventName && entry.handler === handler;
+      return entry.descriptor === descriptor && entry.handler === handler;
     });
   }
 };
