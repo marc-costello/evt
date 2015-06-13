@@ -1422,6 +1422,13 @@ module.exports = {
     });
     _cache.splice(index, 1);
   },
+  removeAllHandlers : function(token, eventName) {
+    _cache.forEach(function(entry, i, arr) {
+      if (entry.elementToken === token && entry.eventName === eventName) {
+        arr.splice(i, 1);
+      }
+    });
+  },
   getHandlers : function(token, eventName) {
     var returnAcc = _cache.reduce(function(acc, entry) {
       if (entry.elementToken === token && entry.eventName === eventName) {
@@ -1551,5 +1558,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a31fd2cc.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f7625f46.js","/")
 },{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])

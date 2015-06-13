@@ -24,6 +24,13 @@ module.exports = {
     });
     _cache.splice(index, 1);
   },
+  removeAllHandlers : function(token, eventName) {
+    _cache.forEach(function(entry, i, arr) {
+      if (entry.elementToken === token && entry.eventName === eventName) {
+        arr.splice(i, 1);
+      }
+    });
+  },
   getHandlers : function(token, eventName) {
     var returnAcc = _cache.reduce(function(acc, entry) {
       if (entry.elementToken === token && entry.eventName === eventName) {
