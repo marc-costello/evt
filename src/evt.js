@@ -18,28 +18,34 @@ function createProxyHandler(token) {
   };
 }
 
-function splitEventDescriptor(descriptor) {
-  return descriptor.split('.');
-}
-
 function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
-  var splitDescriptor = splitEventDescriptor(descriptor);
 
   if (!cache.contains(descriptor, handler)) {
-    var cachedEvent = cache.add(token, descriptor, splitDescriptor, handler);
-    element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
+    var proxyHandler = createProxyHandler(token);
+    var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
+    element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
 }
 
 function off(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
-  var splitDescriptor = splitEventDescriptor(descriptor);
 
-  if (cache.contains(descriptor, handler)) {
-    element.removeEventListener(splitDescriptor[0], handler);
+  var cachedHandler = cache.getHandler(token, descriptor, handler);
+  if (cachedHandler) {
+    element.removeEventListener(cachedHandler.eventType, cachedHandler.proxyHandler);
     cache.removeHandler(token, descriptor, handler);
   }
+}
+
+function offAll(element, descriptor) {
+  var token = element.getAttribute(evtAttributeName);
+
+  var cachedHandlers = cache.getHandlers(token, descriptor);
+  for (var i=0; i < cachedHandlers.length; i++) {
+    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].proxyHandler);
+  }
+  cache.removeAllHandlers(token, descriptor);
 }
 
 function evt(elements) {
@@ -70,10 +76,14 @@ evt.prototype.off = function(descriptor, handler) {
     throw new Error('An event descriptor is required');
   }
 
-  // todo - if handler is undefined - remove all handlers for that descriptor
-
-  for (var i=0; i < this._elements.length; i++) {
-    off(this._elements[i], descriptor, handler);
+  if (!handler) {
+    for (var i=0; i < this._elements.length; i++) {
+      offAll(this._elements[i], descriptor);
+    }
+  } else {
+    for (var y=0; y < this._elements.length; y++) {
+      off(this._elements[y], descriptor, handler);
+    }
   }
 
   return this;
