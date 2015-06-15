@@ -18,11 +18,13 @@ function createProxyHandler(token) {
   };
 }
 
-function createProxyHandlerForOne(token) {
+function createOnceProxyHandler(element, token) {
    return function(event) {
      var handlers = cache.getHandlers(token, event.type);
      handlers.forEach(function(entry) {
        entry.handler(event);
+       element.removeEventListener(entry.descriptor, entry.proxyHandler);
+       cache.removeHandler(entry);
      });
    };
 }
@@ -32,7 +34,7 @@ function on(element, descriptor, handler) {
 
   if (!cache.contains(descriptor, handler)) {
     var proxyHandler = createProxyHandler(token);
-    var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
+    var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, false);
     element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
 }
@@ -41,8 +43,8 @@ function one(element, descriptor, handler) {
    var token = element.getAttribute(evtAttributeName);
 
    if (!cache.contains(descriptor, handler)) {
-     var proxyHandler = createProxyHandlerForOne(token);
-     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
+     var proxyHandler = createOnceProxyHandler(element, token);
+     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, true);
      element.addEventListener(cachedEvent.eventType, proxyHandler);
    }
 }
@@ -53,7 +55,7 @@ function off(element, descriptor, handler) {
   var cachedHandler = cache.getHandler(token, descriptor, handler);
   if (cachedHandler) {
     element.removeEventListener(cachedHandler.eventType, cachedHandler.proxyHandler);
-    cache.removeHandler(token, descriptor, handler);
+    cache.removeHandler(cachedHandler);
   }
 }
 
