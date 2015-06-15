@@ -33,13 +33,9 @@ module.exports = {
     });
   },
   getHandlers : function(token, descriptor) {
-    var returnAcc = _cache.reduce(function(acc, entry) {
-      if (entry.elementToken === token && entry.descriptor === descriptor) {
-        acc.push(entry.handler);
-        return acc;
-      }
-    }, []);
-    return returnAcc;
+    return _cache.filter(function(entry) {
+      return entry.elementToken === token && entry.descriptor === descriptor;
+    });
   },
   getHandler : function(token, descriptor, handler) {
     return _cache.filter(function(entry) {

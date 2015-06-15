@@ -12,10 +12,19 @@ function generateToken() {
 function createProxyHandler(token) {
   return function(event) {
     var handlers = cache.getHandlers(token, event.type);
-    handlers.forEach(function(h) {
-      h(event);
+    handlers.forEach(function(entry) {
+      entry.handler(event);
     });
   };
+}
+
+function createProxyHandlerForOne(token) {
+   return function(event) {
+     var handlers = cache.getHandlers(token, event.type);
+     handlers.forEach(function(entry) {
+       entry.handler(event);
+     });
+   };
 }
 
 function on(element, descriptor, handler) {
@@ -26,6 +35,16 @@ function on(element, descriptor, handler) {
     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
     element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
+}
+
+function one(element, descriptor, handler) {
+   var token = element.getAttribute(evtAttributeName);
+
+   if (!cache.contains(descriptor, handler)) {
+     var proxyHandler = createProxyHandlerForOne(token);
+     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
+     element.addEventListener(cachedEvent.eventType, proxyHandler);
+   }
 }
 
 function off(element, descriptor, handler) {
@@ -54,7 +73,7 @@ function evt(elements) {
 
 evt.prototype.on = function(descriptor, handler) {
   if (!descriptor) {
-    throw new Error('An event type is required');
+    throw new Error('An event descriptor is required');
   }
   if (!handler) {
     throw new Error('A handler is required');
@@ -67,8 +86,20 @@ evt.prototype.on = function(descriptor, handler) {
   return this;
 };
 
-evt.prototype.one = function() {
-  // todo
+evt.prototype.one = function(descriptor, handler) {
+  // same as on, except removeHandler after call. We can do this in the proxy?
+  if (!descriptor) {
+    throw new Error('An event descriptor is required');
+  }
+  if (!handler) {
+    throw new Error('A handler is required');
+  }
+
+  for (var i=0; i < this._elements.length; i++) {
+    one(this._elements[i], descriptor, handler);
+  }
+
+  return this;
 };
 
 evt.prototype.off = function(descriptor, handler) {
