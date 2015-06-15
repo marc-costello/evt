@@ -22,8 +22,9 @@ function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
 
   if (!cache.contains(descriptor, handler)) {
-    var cachedEvent = cache.add(token, descriptor, handler);
-    element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
+    var proxyHandler = createProxyHandler(token);
+    var cachedEvent = cache.add(token, descriptor, handler, proxyHandler);
+    element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
 }
 
@@ -32,7 +33,7 @@ function off(element, descriptor, handler) {
 
   var cachedHandler = cache.getHandler(token, descriptor, handler);
   if (cachedHandler) {
-    element.removeEventListener(cachedHandler.eventType, handler);
+    element.removeEventListener(cachedHandler.eventType, cachedHandler.proxyHandler);
     cache.removeHandler(token, descriptor, handler);
   }
 }
@@ -42,7 +43,7 @@ function offAll(element, descriptor) {
 
   var cachedHandlers = cache.getHandlers(token, descriptor);
   for (var i=0; i < cachedHandlers.length; i++) {
-    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].handler);
+    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].proxyHandler);
   }
   cache.removeAllHandlers(token, descriptor);
 }

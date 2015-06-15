@@ -2,19 +2,20 @@
 
 var _cache = [];
 
-function EventHandler(token, descriptor, handler, enabled) {
+function EventHandler(token, descriptor, handler, proxyHandler, enabled) {
   var splitEventName = descriptor.split('.');
   this.elementToken = token;
   this.descriptor = descriptor;
   this.handler = handler;
+  this.proxyHandler = proxyHandler;
   this.enabled = enabled;
   this.eventType = splitEventName[0];
   this.namespace = splitEventName[1];
 }
 
 module.exports = {
-  add : function(token, descriptor, handler) {
-    var eventHandler = new EventHandler(token, descriptor, handler, true);
+  add : function(token, descriptor, handler, userDefinedHandler) {
+    var eventHandler = new EventHandler(token, descriptor, handler, userDefinedHandler, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
