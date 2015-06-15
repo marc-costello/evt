@@ -14,8 +14,8 @@ function EventHandler(token, descriptor, handler, proxyHandler, enabled) {
 }
 
 module.exports = {
-  add : function(token, descriptor, handler, userDefinedHandler) {
-    var eventHandler = new EventHandler(token, descriptor, handler, userDefinedHandler, true);
+  add : function(token, descriptor, handler, proxyHandler) {
+    var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
