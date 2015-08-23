@@ -2,7 +2,7 @@
 
 var _cache = [];
 
-function EventHandler(token, descriptor, handler, proxyHandler, enabled) {
+function EventHandler(token, descriptor, handler, proxyHandler, once, enabled) {
   var splitEventName = descriptor.split('.');
   this.elementToken = token;
   this.descriptor = descriptor;
@@ -14,16 +14,16 @@ function EventHandler(token, descriptor, handler, proxyHandler, enabled) {
 }
 
 module.exports = {
-  add : function(token, descriptor, handler, proxyHandler) {
-    var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, true);
+  add : function(token, descriptor, handler, proxyHandler, once) {
+    var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, once, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
-  removeHandler : function(token, descriptor, handler) {
-    var index = _cache.findIndex(function(entry) {
-      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
-    });
-    _cache.splice(index, 1);
+  removeHandler : function(entry) {
+    var index = _cache.indexOf(entry);
+    if (index !== -1) {
+      _cache.splice(index, 1);
+    }
   },
   removeAllHandlers : function(token, descriptor) {
     _cache.forEach(function(entry, i, arr) {
@@ -33,13 +33,9 @@ module.exports = {
     });
   },
   getHandlers : function(token, descriptor) {
-    var returnAcc = _cache.reduce(function(acc, entry) {
-      if (entry.elementToken === token && entry.descriptor === descriptor) {
-        acc.push(entry.handler);
-        return acc;
-      }
-    }, []);
-    return returnAcc;
+    return _cache.filter(function(entry) {
+      return entry.elementToken === token && entry.descriptor === descriptor;
+    });
   },
   getHandler : function(token, descriptor, handler) {
     return _cache.filter(function(entry) {

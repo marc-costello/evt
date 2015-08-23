@@ -1242,14 +1242,14 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 },{"1YiZ5S":4,"buffer":1}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      nBits = -7,
-      i = isLE ? (nBytes - 1) : 0,
-      d = isLE ? -1 : 1,
-      s = buffer[offset + i]
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
 
   i += d
 
@@ -1275,14 +1275,14 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 }
 
 exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-      i = isLE ? 0 : (nBytes - 1),
-      d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
   value = Math.abs(value)
 
@@ -1400,27 +1400,28 @@ process.chdir = function (dir) {
 
 var _cache = [];
 
-function EventHandler(token, descriptor, handler, enabled) {
+function EventHandler(token, descriptor, handler, proxyHandler, once, enabled) {
   var splitEventName = descriptor.split('.');
   this.elementToken = token;
   this.descriptor = descriptor;
   this.handler = handler;
+  this.proxyHandler = proxyHandler;
   this.enabled = enabled;
   this.eventType = splitEventName[0];
   this.namespace = splitEventName[1];
 }
 
 module.exports = {
-  add : function(token, descriptor, handler) {
-    var eventHandler = new EventHandler(token, descriptor, handler, true);
+  add : function(token, descriptor, handler, proxyHandler, once) {
+    var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, once, true);
     _cache.push(eventHandler);
     return eventHandler;
   },
-  removeHandler : function(token, descriptor, handler) {
-    var index = _cache.findIndex(function(entry) {
-      return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
-    });
-    _cache.splice(index, 1);
+  removeHandler : function(entry) {
+    var index = _cache.indexOf(entry);
+    if (index !== -1) {
+      _cache.splice(index, 1);
+    }
   },
   removeAllHandlers : function(token, descriptor) {
     _cache.forEach(function(entry, i, arr) {
@@ -1430,13 +1431,9 @@ module.exports = {
     });
   },
   getHandlers : function(token, descriptor) {
-    var returnAcc = _cache.reduce(function(acc, entry) {
-      if (entry.elementToken === token && entry.descriptor === descriptor) {
-        acc.push(entry.handler);
-        return acc;
-      }
-    }, []);
-    return returnAcc;
+    return _cache.filter(function(entry) {
+      return entry.elementToken === token && entry.descriptor === descriptor;
+    });
   },
   getHandler : function(token, descriptor, handler) {
     return _cache.filter(function(entry) {
@@ -1467,19 +1464,41 @@ function generateToken() {
 function createProxyHandler(token) {
   return function(event) {
     var handlers = cache.getHandlers(token, event.type);
-    handlers.forEach(function(h) {
-      h(event);
+    handlers.forEach(function(entry) {
+      entry.handler(event);
     });
   };
+}
+
+function createOnceProxyHandler(element, token) {
+   return function(event) {
+     var handlers = cache.getHandlers(token, event.type);
+     handlers.forEach(function(entry) {
+       entry.handler(event);
+       element.removeEventListener(entry.descriptor, entry.proxyHandler);
+       cache.removeHandler(entry);
+     });
+   };
 }
 
 function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
 
   if (!cache.contains(descriptor, handler)) {
-    var cachedEvent = cache.add(token, descriptor, handler);
-    element.addEventListener(cachedEvent.eventType, createProxyHandler(token));
+    var proxyHandler = createProxyHandler(token);
+    var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, false);
+    element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
+}
+
+function one(element, descriptor, handler) {
+   var token = element.getAttribute(evtAttributeName);
+
+   if (!cache.contains(descriptor, handler)) {
+     var proxyHandler = createOnceProxyHandler(element, token);
+     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, true);
+     element.addEventListener(cachedEvent.eventType, proxyHandler);
+   }
 }
 
 function off(element, descriptor, handler) {
@@ -1487,8 +1506,8 @@ function off(element, descriptor, handler) {
 
   var cachedHandler = cache.getHandler(token, descriptor, handler);
   if (cachedHandler) {
-    element.removeEventListener(cachedHandler.eventType, handler);
-    cache.removeHandler(token, descriptor, handler);
+    element.removeEventListener(cachedHandler.eventType, cachedHandler.proxyHandler);
+    cache.removeHandler(cachedHandler);
   }
 }
 
@@ -1497,7 +1516,7 @@ function offAll(element, descriptor) {
 
   var cachedHandlers = cache.getHandlers(token, descriptor);
   for (var i=0; i < cachedHandlers.length; i++) {
-    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].handler);
+    element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].proxyHandler);
   }
   cache.removeAllHandlers(token, descriptor);
 }
@@ -1508,7 +1527,7 @@ function evt(elements) {
 
 evt.prototype.on = function(descriptor, handler) {
   if (!descriptor) {
-    throw new Error('An event type is required');
+    throw new Error('An event descriptor is required');
   }
   if (!handler) {
     throw new Error('A handler is required');
@@ -1521,8 +1540,20 @@ evt.prototype.on = function(descriptor, handler) {
   return this;
 };
 
-evt.prototype.one = function() {
-  // todo
+evt.prototype.one = function(descriptor, handler) {
+  // same as on, except removeHandler after call. We can do this in the proxy?
+  if (!descriptor) {
+    throw new Error('An event descriptor is required');
+  }
+  if (!handler) {
+    throw new Error('A handler is required');
+  }
+
+  for (var i=0; i < this._elements.length; i++) {
+    one(this._elements[i], descriptor, handler);
+  }
+
+  return this;
 };
 
 evt.prototype.off = function(descriptor, handler) {
@@ -1572,5 +1603,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_da238a6e.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d02163a3.js","/")
 },{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])
