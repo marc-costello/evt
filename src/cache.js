@@ -15,6 +15,8 @@ module.exports = function() {
 
   var _cache = [];
 
+  Object.defineProperty(this, 'cache', { get: function() { return _cache; } });
+
   this.add = function(token, descriptor, handler, proxyHandler, once) {
     var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, once, true);
     _cache.push(eventHandler);
@@ -29,11 +31,11 @@ module.exports = function() {
   };
 
   this.removeAllHandlers = function(token, descriptor) {
-    _cache.forEach(function(entry, i, arr) {
-      if (entry.elementToken === token && entry.descriptor === descriptor) {
-        arr.splice(i, 1);
-      }
-    });
+    for (var i = _cache.length -1; i >= 0 ; i--){
+       if (_cache[i].elementToken === token && _cache[i].descriptor === descriptor){
+           _cache.splice(i, 1);
+       }
+    }
   };
 
   this.getHandlers = function(token, descriptor) {
