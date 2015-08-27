@@ -69,6 +69,10 @@ function offAll(element, descriptor) {
   cache.removeAllHandlers(token, descriptor);
 }
 
+function raise(element, descriptor, eventMsg) {
+   // we want to create our own event
+}
+
 function evt(elements) {
   this._elements = elements;
 }
@@ -122,8 +126,18 @@ evt.prototype.off = function(descriptor, handler) {
   return this;
 };
 
-evt.prototype.raise = function() {
-  // todo
+evt.prototype.raise = function(descriptor, eventMsg) {
+   if (!descriptor) {
+     throw new Error('An event descriptor is required');
+   }
+
+   // todo: if we aren't passing any message (custom event), we can just trigger the handlers for the descriptor
+   //       else we are going to need to build a custom event and pass that to the handlers.
+   //       question is - do we create our own evt object?
+
+   for (var i=0; i < this._elements.length; i++) {
+      raise(this._element[i], descriptor, eventMsg);
+   }
 };
 
 function evtInit(element) {
