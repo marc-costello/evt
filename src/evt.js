@@ -1,6 +1,6 @@
 'use strict';
 
-var cache = require('./cache');
+var cache = new require('./cache')();
 var evtAttributeName = '__evt';
 var idCount = 1;
 
