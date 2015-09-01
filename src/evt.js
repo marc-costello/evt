@@ -1,6 +1,7 @@
 'use strict';
 
-var cache = new require('./cache')();
+var CacheConstructor = require('./cache');
+var cache = new CacheConstructor();
 var evtAttributeName = '__evt';
 var idCount = 1;
 
@@ -9,11 +10,11 @@ function generateToken() {
   return idCount++;
 }
 
-function createProxyHandler(token) {
+function createProxyHandler(element, token) {
   return function(event) {
     var handlers = cache.getHandlers(token, event.type);
     handlers.forEach(function(entry) {
-      entry.handler(event);
+      entry.handler.call(element, event);
     });
   };
 }
@@ -22,7 +23,7 @@ function createOnceProxyHandler(element, token) {
    return function(event) {
      var handlers = cache.getHandlers(token, event.type);
      handlers.forEach(function(entry) {
-       entry.handler(event);
+       entry.handler.call(element, event);
        element.removeEventListener(entry.descriptor, entry.proxyHandler);
        cache.removeHandler(entry);
      });
@@ -33,7 +34,7 @@ function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
 
   if (!cache.contains(descriptor, handler)) {
-    var proxyHandler = createProxyHandler(token);
+    var proxyHandler = createProxyHandler(element, token);
     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, false);
     element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
@@ -67,6 +68,17 @@ function offAll(element, descriptor) {
     element.removeEventListener(cachedHandlers[i].eventType, cachedHandlers[i].proxyHandler);
   }
   cache.removeAllHandlers(token, descriptor);
+}
+
+function raise(element, descriptor, eventMsg) {
+   // Create the event.
+   var eventInst = document.createEvent('Event');
+
+   // Define that the event name is 'build'.
+   eventInst.initEvent(descriptor, true, true);
+
+   // target can be any Element or other EventTarget.
+   element.dispatchEvent(eventInst);
 }
 
 function evt(elements) {
@@ -122,8 +134,18 @@ evt.prototype.off = function(descriptor, handler) {
   return this;
 };
 
-evt.prototype.raise = function() {
-  // todo
+evt.prototype.raise = function(descriptor, eventMsg) {
+   if (!descriptor) {
+     throw new Error('An event descriptor is required');
+   }
+
+   // todo: if we aren't passing any message (custom event), we can just trigger the handlers for the descriptor
+   //       else we are going to need to build a custom event and pass that to the handlers.
+   //       question is - do we create our own evt object?
+
+   for (var i=0; i < this._elements.length; i++) {
+      raise(this._element[i], descriptor, eventMsg);
+   }
 };
 
 function evtInit(element) {
@@ -131,7 +153,7 @@ function evtInit(element) {
     throw new Error('You must supply a DOM element or selector to evt');
   }
 
-  var resolvedElements;
+  var resolvedElements = [];
   if (!(element instanceof Element)) {
     resolvedElements = document.querySelectorAll(element);
   } else {
