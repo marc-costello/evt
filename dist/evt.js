@@ -1110,8 +1110,8 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
-},{"1YiZ5S":4,"base64-js":2,"buffer":1,"ieee754":3}],2:[function(require,module,exports){
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\index.js","/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer")
+},{"VCmEsw":4,"base64-js":2,"buffer":1,"ieee754":3}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -1238,18 +1238,18 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
-},{"1YiZ5S":4,"buffer":1}],3:[function(require,module,exports){
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib\\b64.js","/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib")
+},{"VCmEsw":4,"buffer":1}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isLE ? (nBytes - 1) : 0,
+      d = isLE ? -1 : 1,
+      s = buffer[offset + i]
 
   i += d
 
@@ -1275,14 +1275,14 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 }
 
 exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isLE ? 0 : (nBytes - 1),
+      d = isLE ? 1 : -1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
   value = Math.abs(value)
 
@@ -1326,8 +1326,8 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
-},{"1YiZ5S":4,"buffer":1}],4:[function(require,module,exports){
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754\\index.js","/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754")
+},{"VCmEsw":4,"buffer":1}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -1393,12 +1393,10 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
-},{"1YiZ5S":4,"buffer":1}],5:[function(require,module,exports){
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process\\browser.js","/..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process")
+},{"VCmEsw":4,"buffer":1}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
-
-var _cache = [];
 
 function EventHandler(token, descriptor, handler, proxyHandler, once, enabled) {
   var splitEventName = descriptor.split('.');
@@ -1411,48 +1409,59 @@ function EventHandler(token, descriptor, handler, proxyHandler, once, enabled) {
   this.namespace = splitEventName[1];
 }
 
-module.exports = {
-  add : function(token, descriptor, handler, proxyHandler, once) {
+module.exports = function() {
+
+  var _cache = [];
+
+  Object.defineProperty(this, 'cache', { get: function() { return _cache; } });
+
+  this.add = function(token, descriptor, handler, proxyHandler, once) {
     var eventHandler = new EventHandler(token, descriptor, handler, proxyHandler, once, true);
     _cache.push(eventHandler);
     return eventHandler;
-  },
-  removeHandler : function(entry) {
+  };
+
+  this.removeHandler = function(entry) {
     var index = _cache.indexOf(entry);
     if (index !== -1) {
       _cache.splice(index, 1);
     }
-  },
-  removeAllHandlers : function(token, descriptor) {
-    _cache.forEach(function(entry, i, arr) {
-      if (entry.elementToken === token && entry.descriptor === descriptor) {
-        arr.splice(i, 1);
-      }
-    });
-  },
-  getHandlers : function(token, descriptor) {
+  };
+
+  this.removeAllHandlers = function(token, descriptor) {
+    for (var i = _cache.length -1; i >= 0 ; i--){
+       if (_cache[i].elementToken === token && _cache[i].descriptor === descriptor){
+           _cache.splice(i, 1);
+       }
+    }
+  };
+
+  this.getHandlers = function(token, descriptor) {
     return _cache.filter(function(entry) {
       return entry.elementToken === token && entry.descriptor === descriptor;
     });
-  },
-  getHandler : function(token, descriptor, handler) {
+  };
+
+  this.getHandler = function(token, descriptor, handler) {
     return _cache.filter(function(entry) {
       return entry.elementToken === token && entry.descriptor === descriptor && entry.handler === handler;
     })[0];
-  },
-  contains : function(descriptor, handler) {
+  };
+
+  this.contains = function(descriptor, handler) {
     return _cache.some(function(entry) {
       return entry.descriptor === descriptor && entry.handler === handler;
     });
-  }
+  };
 };
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/cache.js","/")
-},{"1YiZ5S":4,"buffer":1}],6:[function(require,module,exports){
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/cache.js","/")
+},{"VCmEsw":4,"buffer":1}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
-var cache = require('./cache');
+var CacheConstructor = require('./cache');
+var cache = new CacheConstructor();
 var evtAttributeName = '__evt';
 var idCount = 1;
 
@@ -1521,6 +1530,17 @@ function offAll(element, descriptor) {
   cache.removeAllHandlers(token, descriptor);
 }
 
+function raise(element, descriptor, eventMsg) {
+   // Create the event.
+   var eventInst = document.createEvent('Event');
+
+   // Define that the event name is 'build'.
+   eventInst.initEvent(descriptor, true, true);
+
+   // target can be any Element or other EventTarget.
+   element.dispatchEvent(eventInst);
+}
+
 function evt(elements) {
   this._elements = elements;
 }
@@ -1574,8 +1594,18 @@ evt.prototype.off = function(descriptor, handler) {
   return this;
 };
 
-evt.prototype.raise = function() {
-  // todo
+evt.prototype.raise = function(descriptor, eventMsg) {
+   if (!descriptor) {
+     throw new Error('An event descriptor is required');
+   }
+
+   // todo: if we aren't passing any message (custom event), we can just trigger the handlers for the descriptor
+   //       else we are going to need to build a custom event and pass that to the handlers.
+   //       question is - do we create our own evt object?
+
+   for (var i=0; i < this._elements.length; i++) {
+      raise(this._element[i], descriptor, eventMsg);
+   }
 };
 
 function evtInit(element) {
@@ -1583,7 +1613,7 @@ function evtInit(element) {
     throw new Error('You must supply a DOM element or selector to evt');
   }
 
-  var resolvedElements;
+  var resolvedElements = [];
   if (!(element instanceof Element)) {
     resolvedElements = document.querySelectorAll(element);
   } else {
@@ -1603,5 +1633,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d02163a3.js","/")
-},{"./cache":5,"1YiZ5S":4,"buffer":1}]},{},[6])
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e0b1b163.js","/")
+},{"./cache":5,"VCmEsw":4,"buffer":1}]},{},[6])
