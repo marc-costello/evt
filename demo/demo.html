@@ -10,11 +10,12 @@
     <script type="text/javascript" src="../dist/evt.js"></script>
     <script>
       evt(document.body).on('dummy-event', function(e) {
+         console.log('dummy event handler triggered!');
          console.log(e);
       });
       evt('#button-1').on('click', function(e) {
          e.preventDefault();
-         evt(this).raise('dummy-event', {test: 'test'});
+         evt(document.body).raise('dummy-event', {data: 'some data'});
       });
     </script>
   </body>

@@ -1470,11 +1470,11 @@ function generateToken() {
   return idCount++;
 }
 
-function createProxyHandler(token) {
+function createProxyHandler(element, token) {
   return function(event) {
     var handlers = cache.getHandlers(token, event.type);
     handlers.forEach(function(entry) {
-      entry.handler(event);
+      entry.handler.call(element, event);
     });
   };
 }
@@ -1483,7 +1483,7 @@ function createOnceProxyHandler(element, token) {
    return function(event) {
      var handlers = cache.getHandlers(token, event.type);
      handlers.forEach(function(entry) {
-       entry.handler(event);
+       entry.handler.call(element, event);
        element.removeEventListener(entry.descriptor, entry.proxyHandler);
        cache.removeHandler(entry);
      });
@@ -1494,7 +1494,7 @@ function on(element, descriptor, handler) {
   var token = element.getAttribute(evtAttributeName);
 
   if (!cache.contains(descriptor, handler)) {
-    var proxyHandler = createProxyHandler(token);
+    var proxyHandler = createProxyHandler(element, token);
     var cachedEvent = cache.add(token, descriptor, handler, proxyHandler, false);
     element.addEventListener(cachedEvent.eventType, proxyHandler);
   }
@@ -1533,7 +1533,7 @@ function offAll(element, descriptor) {
 function raise(element, descriptor, eventMsg) {
    // Create the event.
    var eventInst = document.createEvent('Event');
-
+   eventInst.data = eventMsg;
    // Define that the event name is 'build'.
    eventInst.initEvent(descriptor, true, true);
 
@@ -1604,7 +1604,7 @@ evt.prototype.raise = function(descriptor, eventMsg) {
    //       question is - do we create our own evt object?
 
    for (var i=0; i < this._elements.length; i++) {
-      raise(this._element[i], descriptor, eventMsg);
+      raise(this._elements[i], descriptor, eventMsg);
    }
 };
 
@@ -1633,5 +1633,5 @@ function evtInit(element) {
 
 window.evt = evtInit;
 
-}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e0b1b163.js","/")
+}).call(this,require("VCmEsw"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_fc6ca342.js","/")
 },{"./cache":5,"VCmEsw":4,"buffer":1}]},{},[6])

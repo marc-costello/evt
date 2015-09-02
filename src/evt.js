@@ -73,7 +73,7 @@ function offAll(element, descriptor) {
 function raise(element, descriptor, eventMsg) {
    // Create the event.
    var eventInst = document.createEvent('Event');
-
+   eventInst.data = eventMsg;
    // Define that the event name is 'build'.
    eventInst.initEvent(descriptor, true, true);
 
@@ -144,7 +144,7 @@ evt.prototype.raise = function(descriptor, eventMsg) {
    //       question is - do we create our own evt object?
 
    for (var i=0; i < this._elements.length; i++) {
-      raise(this._element[i], descriptor, eventMsg);
+      raise(this._elements[i], descriptor, eventMsg);
    }
 };
 
