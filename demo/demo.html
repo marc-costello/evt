@@ -6,6 +6,7 @@
   </head>
   <body>
     <button type="button" id="button-1">button 1</button>
+    <button type="button" id="button-2">button 2</button>
 
     <script type="text/javascript" src="../dist/evt.js"></script>
     <script>
@@ -13,9 +14,15 @@
          console.log('dummy event handler triggered!');
          console.log(e);
       });
+      evt('#button-2').on('click', function(e) {
+         e.preventDefault();
+         console.log('button 2 click event triggered');
+         console.log(e);
+      });
       evt('#button-1').on('click', function(e) {
          e.preventDefault();
-         evt(document.body).raise('dummy-event', {data: 'some data'});
+         // evt(document.body).raise('dummy-event', {data: 'some data'});
+         evt('#button-2').raise('click', {data: 'some data'});
       });
     </script>
   </body>

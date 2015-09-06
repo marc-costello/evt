@@ -71,6 +71,9 @@ function offAll(element, descriptor) {
 }
 
 function raise(element, descriptor, eventMsg) {
+   // todo: what if we need to trigger a build in event on the element
+   // such as click for example.
+
    // Create the event.
    var eventInst = document.createEvent('Event');
    eventInst.data = eventMsg;
